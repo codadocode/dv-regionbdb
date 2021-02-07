@@ -1,0 +1,9 @@
+br\com\dvlopando\regionbdb\effect\EpicenterEffect$1.class
+br\com\dvlopando\regionbdb\effect\EPICENTER_EFFECT_TYPE.class
+br\com\dvlopando\regionbdb\core\EpicenterRegion.class
+br\com\dvlopando\regionbdb\effect\EpicenterEffect.class
+br\com\dvlopando\regionbdb\event\RegionEvent.class
+br\com\dvlopando\regionbdb\GlobalConfig.class
+br\com\dvlopando\regionbdb\RegionBDB.class
+br\com\dvlopando\regionbdb\core\Epicenter.class
+br\com\dvlopando\regionbdb\core\EpicenterManager.class

@@ -1,0 +1,7 @@
+name: RegionDBD
+version: 1.0
+main: br.com.dvlopando.regionbdb.RegionBDB
+commands:
+  epc:
+    description: Gerenciar Plugin
+    usage: /epc
