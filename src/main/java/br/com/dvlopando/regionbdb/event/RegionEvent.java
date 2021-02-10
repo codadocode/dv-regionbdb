@@ -11,8 +11,6 @@ import org.bukkit.potion.PotionEffect;
 public class RegionEvent implements Listener {
     @EventHandler
     public void onPlayerMoveEvent(PlayerMoveEvent event)   {
-        Location tmpLocation = event.getPlayer().getWorld().getSpawnLocation();
-        Player tmpPlayer = event.getPlayer();
-        GlobalConfig.getEpicenterManager().checkPlayer(tmpPlayer);
+        GlobalConfig.getEpicenterManager().cmdRunRegion(GlobalConfig.getEpicenterManager().getPlayerInfo(event.getPlayer()));
     }
 }

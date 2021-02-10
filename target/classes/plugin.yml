@@ -2,6 +2,9 @@ name: RegionDBD
 version: 1.0
 main: br.com.dvlopando.regionbdb.RegionBDB
 commands:
-  epc:
+  epccreate:
     description: Gerenciar Plugin
-    usage: /epc
+    usage: /epccreate
+  epcaddregion:
+    description: Create a new epc region
+    usage: /epcaddregion

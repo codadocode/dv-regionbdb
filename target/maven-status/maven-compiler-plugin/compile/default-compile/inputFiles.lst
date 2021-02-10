@@ -1,1 +1,10 @@
 D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\RegionBDB.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\core\Epicenter.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\effect\EpicenterEffect.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\effect\EPICENTER_EFFECT_TYPE.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\player\PlayerInfo.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\GlobalConfig.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\core\EpicenterManager.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\event\RegionEvent.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\event\RegisterPlayerEvent.java
+D:\Projetos\Java\dv-regionbdb\src\main\java\br\com\dvlopando\regionbdb\core\EpicenterRegion.java

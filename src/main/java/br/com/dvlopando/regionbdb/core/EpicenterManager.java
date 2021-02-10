@@ -1,128 +1,87 @@
 package br.com.dvlopando.regionbdb.core;
 
+import br.com.dvlopando.regionbdb.GlobalConfig;
 import br.com.dvlopando.regionbdb.effect.EPICENTER_EFFECT_TYPE;
+import br.com.dvlopando.regionbdb.player.PlayerInfo;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EpicenterManager {
     private Epicenter epicenter = null;
-    public void createEpicenter(Player player)   {
-        if (!hasEpicenter())   {
-            this.epicenter = new Epicenter(player.getLocation());
+    private Map<Player, PlayerInfo> players;
+    public EpicenterManager()   {
+        this.players = new HashMap<Player, PlayerInfo>();
+    }
+    public void addPlayer(Player player)   {
+        if (!this.players.containsKey(player))   {
+            PlayerInfo playerInfo = new PlayerInfo(player);
+            this.players.put(playerInfo.getPlayer(), playerInfo);
         }
     }
-    public void deleteEpicenter()   {
+    public void removePlayer(Player player)   {
+        if (this.players.containsKey(player))   {
+            this.players.remove(player);
+        }
+    }
+    public PlayerInfo getPlayerInfo(Player player)   {
+        if (this.players.containsKey(player))   {
+            return this.players.get(player);
+        }
+        return null;
+    }
+    public boolean cmdCreateEpicenter(Location epicenterLocation)   {
+        if (!hasEpicenter())   {
+            this.epicenter = new Epicenter(epicenterLocation);
+            GlobalConfig.getServer().getLogger().info("Epicenter created with success!");
+            return true;
+        }
+        return false;
+    }
+    public void cmdDeleteEpicenter()   {
         if (hasEpicenter())   {
             this.epicenter = null;
         }
     }
-    public void createEpicenterRegion(Player player, double distance, List<EPICENTER_EFFECT_TYPE>effectsTypes)   {
+    public boolean cmdCreateRegion(String regionName, double distance, EPICENTER_EFFECT_TYPE effectType)   {
         if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                for (EpicenterRegion epicenterRegion : epicenterRegions)   {
-                    distance += epicenterRegion.getEpicenterDistance();
-                }
-            }
-            EpicenterRegion newEpicenterRegion = new EpicenterRegion(distance);
-            newEpicenterRegion.addEffect(effectsTypes);
-            this.epicenter.addRegion(newEpicenterRegion);
+            this.epicenter.createRegion(regionName, distance, effectType);
+            return true;
+        }
+        return false;
+    }
+    public void cmdEditRegionDistance(String regionName, double distance)   {
+        if (hasEpicenter())   {
+            this.epicenter.editRegionDistance(regionName, distance);
         }
     }
-    public void createEpicenterRegion(Player player, double distance, EPICENTER_EFFECT_TYPE effectType)   {
+    public void cmdEditRegionName(String oldName, String newName)   {
         if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                for (EpicenterRegion epicenterRegion : epicenterRegions)   {
-                    distance += epicenterRegion.getEpicenterDistance();
-                }
-            }
-            EpicenterRegion newEpicenterRegion = new EpicenterRegion(distance);
-            newEpicenterRegion.addEffect(effectType);
-            this.epicenter.addRegion(newEpicenterRegion);
+            this.epicenter.editRegionName(oldName, newName);
         }
     }
-    public void removeEpicenterRegion(Player player)   {
+    public void cmdAddRegionEffect(String regionName, EPICENTER_EFFECT_TYPE effectType)   {
         if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                this.epicenter.removeRegion(epicenterRegions.get(epicenterRegions.size() - 1));
-            }
+            this.epicenter.addRegionEffect(regionName, effectType);
         }
     }
-    public void editEpicenterRegionDistance(Player player, double distance)   {
+    public void cmdRemoveRegionEffect(String regionName, EPICENTER_EFFECT_TYPE effectType)   {
         if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                epicenterRegions.get(epicenterRegions.size() - 1).editEpicenterDistance(distance);
-            }
+            this.epicenter.removeRegionEffect(regionName, effectType);
         }
     }
-    public List<EpicenterRegion> getEpicenterRegion(Player player)   {
+    public void cmdRemoveRegion(String regionName)   {
         if (hasEpicenter())   {
-            return this.epicenter.getRegion(player);
-        }
-        return null;
-    }
-    public void addEpicenterEffect(Player player, EPICENTER_EFFECT_TYPE effectType)   {
-        if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                epicenterRegions.get(epicenterRegions.size() - 1).addEffect(effectType);
-            }
+            this.epicenter.removeRegion(regionName);
         }
     }
-    public void addEpicenterEffect(Player player, List<EPICENTER_EFFECT_TYPE> effectsType)   {
+    public void cmdRunRegion(PlayerInfo playerInfo)   {
         if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                epicenterRegions.get(epicenterRegions.size() - 1).addEffect(effectsType);
-            }
+            this.epicenter.runRegion(playerInfo);
         }
-    }
-    public void removeEpicenterEffect(Player player, List<EPICENTER_EFFECT_TYPE> effectsType)   {
-        if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                epicenterRegions.get(epicenterRegions.size() - 1).removeEffect(effectsType);
-            }
-        }
-    }
-    public void removeEpicenterEffect(Player player, EPICENTER_EFFECT_TYPE effectType)   {
-        if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                epicenterRegions.get(epicenterRegions.size() - 1).addEffect(effectType);
-            }
-        }
-    }
-    public void checkPlayer(Player player)   {
-        if (hasEpicenter())   {
-            List<EpicenterRegion> epicenterRegions = getEpicenterRegion(player);
-            if (epicenterRegions.size() > 0)   {
-                for (EpicenterRegion epicenterRegion : epicenterRegions)   {
-                    epicenterRegion.applyEffects(player);
-                }
-            }
-        }
-    }
-    public EPICENTER_EFFECT_TYPE stringToEpicenterEffect(String effect)   {
-        if (hasEpicenter())   {
-            switch (effect)   {
-                case "nausea":
-                    return EPICENTER_EFFECT_TYPE.NAUSEA;
-                case "blindness":
-                    return EPICENTER_EFFECT_TYPE.BLINDNESS;
-                case "poison":
-                    return EPICENTER_EFFECT_TYPE.POISON;
-                case "weakness":
-                    return EPICENTER_EFFECT_TYPE.WEAKNESS;
-                case "hunger":
-                    return EPICENTER_EFFECT_TYPE.HUNGER;
-            }
-        }
-        return null;
     }
     public boolean hasEpicenter()   {
         if (this.epicenter != null)   {

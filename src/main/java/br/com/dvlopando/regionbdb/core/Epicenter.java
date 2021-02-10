@@ -1,19 +1,22 @@
 package br.com.dvlopando.regionbdb.core;
 
+import br.com.dvlopando.regionbdb.effect.EPICENTER_EFFECT_TYPE;
+import br.com.dvlopando.regionbdb.player.PlayerInfo;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Epicenter {
-    private Location epicenterLocation;
     private boolean active;
-    private List<EpicenterRegion> epicenterRegions;
-    public Epicenter(Location tmpLocation)   {
-        this.epicenterLocation = tmpLocation;
-        this.active = true;
-        this.epicenterRegions = new ArrayList<EpicenterRegion>();
+    private Location epicenterLocation;
+    private Map<String,EpicenterRegion> epicenterRegions;
+    public Epicenter(Location epicenterLocation)    {
+        this.epicenterLocation = epicenterLocation;
+        this.epicenterRegions = new HashMap<String, EpicenterRegion>();
     }
     public Location getEpicenterLocation()   {
         return this.epicenterLocation;
@@ -27,26 +30,56 @@ public class Epicenter {
     public void setActive(boolean active)   {
         this.active = active;
     }
-    public List<EpicenterRegion> getRegion(Player player)   {
-        List<EpicenterRegion> tmpEpicenterRegions = new ArrayList<EpicenterRegion>();
-        for (EpicenterRegion epicenterRegion : this.epicenterRegions)   {
-            if (player.getLocation().distance(this.epicenterLocation) > epicenterRegion.getEpicenterDistance())   {
-                tmpEpicenterRegions.add(epicenterRegion);
-            }
-        }
-        return tmpEpicenterRegions;
-    }
-    public void applyEpicenterRegionEffect(Player player,List<EpicenterRegion> epicenterRegions)   {
-        for (EpicenterRegion epicenterRegion : epicenterRegions)   {
-            epicenterRegion.applyEffects(player);
+    public void createRegion(String regionName, double distance)   {
+        if (!this.epicenterRegions.containsKey(regionName))   {
+            EpicenterRegion newRegion = new EpicenterRegion(regionName, distance,this);
+            this.epicenterRegions.put(newRegion.getRegionName(), newRegion);
         }
     }
-    public void removeRegion(EpicenterRegion epicenterRegion)   {
-        if (this.epicenterRegions.contains(epicenterRegion))   {
-            this.epicenterRegions.remove(epicenterRegion);
+    public void createRegion(String regionName, double distance, EPICENTER_EFFECT_TYPE effectType)   {
+        if (!this.epicenterRegions.containsKey(regionName))   {
+            EpicenterRegion newRegion = new EpicenterRegion(regionName, distance, this);
+            newRegion.addEffect(effectType);
+            this.epicenterRegions.put(newRegion.getRegionName(), newRegion);
         }
     }
-    public void addRegion(EpicenterRegion newEpicenterRegion)   {
-        this.epicenterRegions.add(newEpicenterRegion);
+    public void editRegionDistance(String regionName, double distance)  {
+        if (this.epicenterRegions.containsKey(regionName))   {
+            this.epicenterRegions.get(regionName).setEpicenterDistance(distance);
+        }
+    }
+    public void editRegionName(String actualName, String newName)   {
+        if (this.epicenterRegions.containsKey(actualName))   {
+            this.epicenterRegions.get(actualName).setRegionName(newName);
+        }
+    }
+    public void addRegionEffect(String regionName, EPICENTER_EFFECT_TYPE effectType)   {
+        if (this.epicenterRegions.containsKey(regionName))   {
+            this.epicenterRegions.get(regionName).addEffect(effectType);
+        }
+    }
+    public void removeRegionEffect(String regionName, EPICENTER_EFFECT_TYPE effectType)   {
+        if (this.epicenterRegions.containsKey(regionName))   {
+            this.epicenterRegions.get(regionName).removeEffect(effectType);
+        }
+    }
+    public void removeRegion(String regionName)   {
+        if (this.epicenterRegions.containsKey(regionName))   {
+            this.epicenterRegions.remove(regionName);
+        }
+    }
+    public void runRegion(PlayerInfo playerInfo)   {
+        for (EpicenterRegion epicenterRegion : this.epicenterRegions.values())   {
+            epicenterRegion.inRegion(playerInfo);
+        }
+    }
+    public boolean hasRegion()   {
+        if (this.epicenterRegions.size() > 0)   {
+            return true;
+        }
+        return false;
+    }
+    public Map<String, EpicenterRegion> getEpicenterRegionsMap()   {
+        return this.epicenterRegions;
     }
 }
